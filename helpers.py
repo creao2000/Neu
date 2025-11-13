@@ -39,14 +39,14 @@ def get_available_models():
         print(f"❌ Error getting models: {e}")
         return None
 
-def api_chat_completion(messages: List[Dict], max_tokens: int = 4096, temperature: float = 0.7) -> str:
+def api_chat_completion(messages: List[Dict], max_tokens: int = 8192, temperature: float = 0.7) -> str:
     """Use chat completions endpoint"""
     try:
         payload = {
             "messages": messages,
             "max_tokens": max_tokens,
             "temperature": temperature,
-            "stop": ["\n\n", "###", "Student:", "User:"],
+            "stop": ["Student:", "User:", "Human:", "###END###"],
             "stream": False
         }
         
@@ -69,14 +69,14 @@ def api_chat_completion(messages: List[Dict], max_tokens: int = 4096, temperatur
     
     return ""
 
-def api_completion(prompt: str, max_tokens: int = 4096, temperature: float = 0.7) -> str:
+def api_completion(prompt: str, max_tokens: int = 8192, temperature: float = 0.7) -> str:
     """Use completions endpoint"""
     try:
         payload = {
             "prompt": prompt,
             "max_tokens": max_tokens,
             "temperature": temperature,
-            "stop": ["\n\n", "###", "Student:", "User:"],
+            "stop": ["Student:", "User:", "Human:", "###END###"],
             "stream": False
         }
         
@@ -199,7 +199,7 @@ def clean_llm_response(text: str) -> str:
 # ---------------------------
 # Safe LLM completion
 # ---------------------------
-def safe_llm_complete(messages: List[Dict], max_tokens: int = 4096, temperature: float = 0.7) -> str:
+def safe_llm_complete(messages: List[Dict], max_tokens: int = 8192, temperature: float = 0.7) -> str:
     """Safe LLM completion using API endpoints"""
     
     # Try chat completions first
@@ -334,7 +334,7 @@ def get_intent_response(query: str, analysis: Dict[str, Any], llm=None, conversa
         messages = build_universal_prompt(current_query, context)
         
         # Generate response using API with high token limit
-        response = safe_llm_complete(messages, max_tokens=4096, temperature=0.7)
+        response = safe_llm_complete(messages, max_tokens=8192, temperature=0.7)
         
         print(f"📝 Response generated: {len(response)} characters")
         
